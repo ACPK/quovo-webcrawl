@@ -12,29 +12,29 @@ class EdgarFiling:
   def __init__(self, cik, form):
     self.cik = cik
     self.form = form
-    self.rawAccession = self.getAccessionNumber()
+    self.mostRecentAccession = self.getAccessionNumber()
+    self.filingURL = self.getFilingURL()
 
-  def getURL(self):
+  # there is a programmatic way to create the url to which we make a request for the txt filing data
+  def getFilingURL(self):
     formattedAccession = self.formatAccession()
-    url = "https://www.sec.gov/Archives/edgar/data/{}/{}/{}.txt".format(self.cik.lstrip("0"), formattedAccession, self.rawAccession)
-    print(url)
+    filingURL = "https://www.sec.gov/Archives/edgar/data/{}/{}/{}.txt".format(self.cik.lstrip("0"), formattedAccession, self.mostRecentAccession)
+    return filingURL
 
   def formatAccession(self):
-    return self.rawAccession.replace("-", "")
+    return self.mostRecentAccession.replace("-", "")
 
-  # Get the accession number of the most recent filing of 
-  def getAccessionNumber(self):    
-    url = "https://www.sec.gov/cgi-bin/browse-edgar?CIK={}&type={}&output=atom".format(self.cik, self.form)
-    document = getSoupFromURL(url)
+  # Get the accession number of the most recent filing of the relevant form type
+  def getAccessionNumber(self):
+    # this url is to a query of all forms of the chosen type, by the chosen CIK
+    queryURL = "https://www.sec.gov/cgi-bin/browse-edgar?CIK={}&type={}&output=atom".format(self.cik, self.form)
+    document = getSoupFromURL(queryURL)
     # they spell 'accession NUMBER' wrong it seems...
     accessionNumber = document.find('accession-nunber').text
     return accessionNumber
 
-
-# https://www.sec.gov/Archives/edgar/data/1166559/000110465916139781/0001104659-16-139781.txt
-
 def main():
   filing = EdgarFiling(cik, '13F-HR')
-  filing.getURL()
+  print(filing.filingURL)
 
 main()
