@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup as Soup
+from collections import OrderedDict
 
 url = 'https://www.sec.gov/Archives/edgar/data/1166559/000110465916139781/0001104659-16-139781.txt'
 
@@ -14,15 +15,23 @@ def generateCSV(soup):
   rows = soup.find_all('infotable')
   fields = gatherColumnNames(rows[0])
 
+  # this is a list of each row of data represented as a dictionary of field: rowFieldValue 
+  rowData = [parseSingleRow(row, fields) for row in rows]
+  
+
+
+def parseSingleRow(soup, fields):
+  output = OrderedDict()  
+  for column in fields:
+    output[column] = soup.find(column).text
+  return output
+
 def hasNoNestedColumns(column):
   return len(column.findChildren()) == 0
 
 def extractNestedColumns(child):
   if hasNoNestedColumns(child):
-    if child is None:
-      return 0
-    else:
-      return child
+    return child.name
 
 def gatherColumnNames(row):
   children = row.findChildren()
