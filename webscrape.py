@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup as Soup
 from collections import OrderedDict
 import csv
+import sys, traceback
 
 url = 'https://www.sec.gov/Archives/edgar/data/1166559/000110465916139781/0001104659-16-139781.txt'
 
@@ -18,7 +19,6 @@ def generateCSV(soup):
   # this is a list of each row of data represented as a dictionary of field: rowFieldValue 
   rowDataDict = [parseSingleRow(row, fields) for row in rows]
   fileName = generateCSVName(soup)
-
   createCSV(fileName, fields, rowDataDict)
 
 def gatherColumnNames(row):
@@ -59,8 +59,12 @@ def createCSV(docName, fields, dataDict):
     writer.writeheader()
     writer.writerows(dataDict)
 
-def main():
-  filing = getSoupFromURL(url)
-  generateCSV(filing)
+def main(url):
+  try:
+    filing = getSoupFromURL(url)
+    generateCSV(filing)
+  except:
+    traceback.print_exc(file=sys.stdout)
 
-main()
+
+main(url)
