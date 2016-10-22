@@ -4,7 +4,7 @@ from collections import OrderedDict
 import csv
 import sys, traceback
 
-url = 'https://www.sec.gov/Archives/edgar/data/1166559/000110465916139781/0001104659-16-139781.txt'
+url = 'https://www.sec.gov/Archives/edgar/data/1667163/000139834416019829/0001398344-16-019829.txt'
 
 def getSoupFromURL(url):
   html = requests.get(url).content
@@ -66,5 +66,3 @@ def main(url):
   except:
     traceback.print_exc(file=sys.stdout)
 
-
-main(url)
