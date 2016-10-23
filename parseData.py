@@ -3,13 +3,25 @@ from bs4 import BeautifulSoup as Soup
 from collections import OrderedDict
 import csv
 import sys, traceback
+import utility as u
 
-url = 'https://www.sec.gov/Archives/edgar/data/1667163/000139834416019829/0001398344-16-019829.txt'
+def generateCSVFromURL(url):
+  try:    
+    reportSoup = u.getSoupFromURL(url)
+    fields, rowDataDict, fileName = parseSoupForRelevantData(reportSoup)
+    writeCSV(fields, rowDataDict, fileName)
+  except:
+    traceback.print_exc(file=sys.stdout)
 
-def getSoupFromURL(url):
-  html = requests.get(url).content
-  document = Soup(html, 'html.parser')
-  return document
+def parseSoupForRelevantData(soup):
+  # the 'rows' of the table are made up of <infotable> tags which do not describe any other elements in the xml
+  # each row will have the same fields
+  rows = soup.find_all('infotable')
+  fields = gatherColumnNames(rows[0])
+  # this is a list of each row of data represented as a dictionary of field: rowFieldValue 
+  rowDataDict = [parseSingleRow(row, fields) for row in rows]
+  fileName = generateCSVName(soup)
+  return fields, rowDataDict, fileName
 
 def generateCSV(soup):
   # the 'rows' of the table are made up of <infotable> tags which do not describe any other elements in the xml
@@ -19,8 +31,9 @@ def generateCSV(soup):
   # this is a list of each row of data represented as a dictionary of field: rowFieldValue 
   rowDataDict = [parseSingleRow(row, fields) for row in rows]
   fileName = generateCSVName(soup)
-  createCSV(fileName, fields, rowDataDict)
-
+  # write this data to csv file
+  writeCSV(fileName, fields, rowDataDict)
+  
 def gatherColumnNames(row):
   children = row.findChildren()
   # we want a list without the divs that wrap nested columns  
@@ -53,16 +66,8 @@ def generateCSVName(soup):
   csvName = '-'.join([fundName, cik, date, formType]) + '.csv'
   return csvName
 
-def createCSV(docName, fields, dataDict):
-  with open(docName , 'w') as csvfile:    
+def writeCSV(fields, dataDict, docName):
+  with open(docName , 'w') as csvfile:
     writer = csv.DictWriter(csvfile, delimiter='\t', fieldnames=fields)
     writer.writeheader()
     writer.writerows(dataDict)
-
-def main(url):
-  try:
-    filing = getSoupFromURL(url)
-    generateCSV(filing)
-  except:
-    traceback.print_exc(file=sys.stdout)
-
