@@ -11,8 +11,8 @@ class transferProcess:
     # After this step, everything in ReportURLs will either be a valid url to a filing,
     # or 'No reports available'
     self._generateAllURLs()
-    print(self.reportURLs)
     
+
 
 
   def _generateAllURLs(self):

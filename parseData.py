@@ -4,6 +4,8 @@ from collections import OrderedDict
 import csv
 import sys, traceback
 
+url = 'https://www.sec.gov/Archives/edgar/data/1667163/000139834416019829/0001398344-16-019829.txt'
+
 def getSoupFromURL(url):
   html = requests.get(url).content
   document = Soup(html, 'html.parser')
