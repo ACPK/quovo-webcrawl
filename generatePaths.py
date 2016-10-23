@@ -1,8 +1,6 @@
 import requests
 from bs4 import BeautifulSoup as Soup
 
-cik = '0001166559'
-
 def getSoupFromURL(url):
   html = requests.get(url).content
   document = Soup(html, 'html.parser')
@@ -25,16 +23,13 @@ class EdgarFiling:
     return self.mostRecentAccession.replace("-", "")
 
   # Get the accession number of the most recent filing of the relevant form type
-  def getAccessionNumber(self):
+  def getAccessionNumber(self):    
     # this url is to a query of all forms of the chosen type, by the chosen CIK
     queryURL = "https://www.sec.gov/cgi-bin/browse-edgar?CIK={}&type={}&output=atom".format(self.cik, self.form)
     document = getSoupFromURL(queryURL)
+
+    print(queryURL)
+
     # they spell 'accession NUMBER' wrong it seems...
     accessionNumber = document.find('accession-nunber').text
     return accessionNumber
-
-def main():
-  filing = EdgarFiling(cik, '13F-HR')
-  print(filing.filingURL)
-
-main()
