@@ -1,24 +1,21 @@
 from generatePaths import EdgarFiling
 
 class transferProcess:
-  def __init__(self, inputFile):
+  def __init__(self, inputFile, formType):
     self.inputFile = inputFile
+    self.formType = formType
     self.reportURLs = []
   
   def run(self):
-    print('hiya!')
-    # First step, get the 
+    # First step, get the urls for the txt filing for each id in the input file
+    # After this step, everything in ReportURLs will either be a valid url to a filing,
+    # or 'No reports available'
+    self._generateAllURLs()
+    print(self.reportURLs)
+    
 
 
-
-
-
-
-
-
-
-
-  def _generateURLs(self):    
+  def _generateAllURLs(self):
     def _getFilingURL(cik, form):
       decoded_string = bytes(cik, "utf-8").decode("unicode_escape")      
       currentFiling = EdgarFiling(cik, form)
