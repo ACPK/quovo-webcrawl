@@ -8,7 +8,7 @@ def main(args=None):
     # run the entire process of creating a csv file for each fund in the input list
     from transferMaster import transferProcess
     currentTransfer = transferProcess('testInput.txt', '13F-HR')
-    print('running right now...')   
+    print('running right now...')
     currentTransfer.run()
     
 if __name__ == "__main__":
