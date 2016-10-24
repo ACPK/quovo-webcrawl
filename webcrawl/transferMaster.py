@@ -24,7 +24,7 @@ class transferProcess:
   def _generateAllURLs(self):
     with open(self.inputFile, 'r') as myFile:
       allTickers = myFile.readlines()
-      self.reportURLs = [self._getFilingURL(cik, '13F-HR') for cik in allTickers]
+      self.reportURLs = [self._getFilingURL(cik, self.formType) for cik in allTickers]
 
   def _generateAllCSVs(self):
     for reportURL in self.reportURLs:

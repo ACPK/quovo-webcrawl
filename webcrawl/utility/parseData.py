@@ -67,7 +67,9 @@ def generateCSVName(soup):
   return csvName
 
 def writeCSV(fields, dataDict, docName):
-  with open(docName , 'w') as csvfile:
+  fullDocPath = 'csv/' + docName
+  with open(fullDocPath, 'w') as csvfile:
+  # with open(docName , 'w') as csvfile:    
     writer = csv.DictWriter(csvfile, delimiter='\t', fieldnames=fields)
     writer.writeheader()
     writer.writerows(dataDict)
