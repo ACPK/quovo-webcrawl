@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup as Soup
 from collections import OrderedDict
 import csv
 import sys, traceback
-import utility as u
+import utility.utility as u
 
 def generateCSVFromURL(url):
   try:    

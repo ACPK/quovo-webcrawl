@@ -1,5 +1,5 @@
-from generatePaths import EdgarFiling
-import parseData
+from utility.generatePaths import EdgarFiling
+import utility.parseData as pd
 
 class transferProcess:
   def __init__(self, inputFile, formType):
@@ -29,4 +29,4 @@ class transferProcess:
   def _generateAllCSVs(self):
     for reportURL in self.reportURLs:
       if reportURL != 'No Reports Available':
-        parseData.generateCSVFromURL(reportURL)
+        pd.generateCSVFromURL(reportURL)

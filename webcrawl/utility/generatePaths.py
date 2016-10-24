@@ -1,4 +1,4 @@
-from utility import getSoupFromURL
+from utility.utility import getSoupFromURL
 
 
 class EdgarFiling:
